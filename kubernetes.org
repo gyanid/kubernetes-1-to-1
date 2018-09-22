@@ -170,6 +170,21 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    users for authenticating to those clusters using the =--users= or
    =--clusters= flags with the =set-context= command.
 
+** Viewing objects
+   #+BEGIN_SRC bash
+   $ kubectl get pods my-pod -o yaml
+   $ kubectl get pods my-pod -o jsonpath --template={.status.podIP}
+   $ kubectl describe <resource-name> <obj-name>
+   #+END_SRC
+
+** Creating, updating and destroying
+   #+BEGIN_SRC bash
+   $ kubectl apply -f obj.yaml
+   $ kubectl delete -f obj.yaml
+   $ kubectl delete <resource-name> <obj-name>
+   #+END_SRC
+
+* Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
   $ kubectl get nodes
@@ -184,6 +199,8 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   $ kubectl get pods --no-headers
   $ kubectl get pods -o yaml
   $ kubecetl describe pods <my-pod>
+  $ kubectl label pods <pod> color=red
+  $ kubectl label pods <pod> label-
   #+END_SRC
 
   #+BEGIN_SRC bash
