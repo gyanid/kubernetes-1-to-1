@@ -56,21 +56,7 @@
     to change to most likely to change in order to optimize the image
     size for pushing and pulling.
 
-** Kubernets Components
-*** controller-manager
-    It is responsible for running various controllers that regulate
-    behavior in the cluster: for example, ensuring that all of the
-    replicas of a service are available and healthy.
-
-*** scheduler
-    The scheduler is responsible for placing different pods onto
-    different nodes in the cluster.
-
-*** etcd server
-    It is the storage for the cluster where all of the API objects are
-    stored.
-
-* Kubectl commands
+* Kubernets Components
   #+BEGIN_SRC bash
 $ kubectl get componentstatuses
 NAME                 STATUS    MESSAGE              ERROR
@@ -78,11 +64,53 @@ controller-manager   Healthy   ok
 scheduler            Healthy   ok                   
 etcd-0               Healthy   {"health": "true"}
   #+END_SRC
+** controller-manager
+   It is responsible for running various controllers that regulate
+   behavior in the cluster: for example, ensuring that all of the
+   replicas of a service are available and healthy.
 
-  #+BEGIN_SRC bash
-$ kubectl get nodes
+** scheduler
+   The scheduler is responsible for placing different pods onto
+   different nodes in the cluster.
+
+** etcd server
+   It is the storage for the cluster where all of the API objects are
+   stored.
+
+* Kubernetes Nodes
+   #+BEGIN_SRC bash
+   $ kubectl get nodes
 NAME       STATUS    ROLES     AGE       VERSION
 minikube   Ready     master    12d       v1.10.0
+   #+END_SRC
+ 
+   In Kubernetes nodes are separated into master nodes that containe
+   containers like the API server, scheduler, etc., which manage the
+   cluster, and worker nodes where your containers will
+   run. Kubernetes won't generally schedule work onto master nodes to
+   ensure that user workloads don't harm the overall operation of the
+   cluster.
+
+* Cluster Components
+** Kubernetes Proxy
+   The kubernetes proxy is responsible for routing network traffic to
+   load-balanced services in the Kubernetes cluster. To do its job,
+   the proxy must be present on every node in the cluster. Kubernetes
+   has an API object named =DaemonSet=, which we will learn about
+   later.
+   #+BEGIN_SRC bash
+$ kubectl get daemonSets --namespace=kube-system kube-proxy
+NAME         DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+kube-proxy   1         1         1         1            1           <none>          12d
+   #+END_SRC
+
+* Kubectl commands
+  #+BEGIN_SRC bash
+  $ kubectl get componentstatuses
+  $ kubectl get nodes
+  $ kubectl describe nodes node-1
+  $ kubectl get daemonSets --namespace=kube-system kube-proxy
+  $ kubectl get pods --namespace=kube-system
   #+END_SRC
 
   #+BEGIN_SRC bash
