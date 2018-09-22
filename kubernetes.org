@@ -80,6 +80,12 @@ etcd-0               Healthy   {"health": "true"}
   #+END_SRC
 
   #+BEGIN_SRC bash
+$ kubectl get nodes
+NAME       STATUS    ROLES     AGE       VERSION
+minikube   Ready     master    12d       v1.10.0
+  #+END_SRC
+
+  #+BEGIN_SRC bash
   $ kubectl config current-context
   $ kubectl config use-context mas-qa/oshift-api-jfk3-qa-bamtech-co:8443/yagrawal
   $ kubectl config view
