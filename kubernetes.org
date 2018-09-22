@@ -56,9 +56,27 @@
     to change to most likely to change in order to optimize the image
     size for pushing and pulling.
 
+** Kubernets Components
+*** controller-manager
+    It is responsible for running various controllers that regulate
+    behavior in the cluster: for example, ensuring that all of the
+    replicas of a service are available and healthy.
+
+*** scheduler
+    The scheduler is responsible for placing different pods onto
+    different nodes in the cluster.
+
+*** etcd server
+    It is the storage for the cluster where all of the API objects are
+    stored.
+
 * Kubectl commands
   #+BEGIN_SRC bash
-  $ kubectl get componentstatuses
+$ kubectl get componentstatuses
+NAME                 STATUS    MESSAGE              ERROR
+controller-manager   Healthy   ok                   
+scheduler            Healthy   ok                   
+etcd-0               Healthy   {"health": "true"}
   #+END_SRC
 
   #+BEGIN_SRC bash
