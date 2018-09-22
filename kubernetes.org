@@ -140,5 +140,27 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    $ kubectl proxy
    #+END_SRC
 
+* Kubectl commands
+  #+BEGIN_SRC bash
+  $ kubectl get componentstatuses
+  $ kubectl get nodes
+  $ kubectl describe nodes node-1
+  $ kubectl get daemonSets --namespace=kube-system kube-proxy
+  $ kubectl get pods --namespace=kube-system
+  $ kubectl get deployments --namespace=kube-system kube-dns
+  $ kubectl get services --namespace=kube-system kube-dns
+  $ kubectl get deployments --namespace=kube-system kubernetes-dashboard
+  $ kubectl get services --namespace=kube-system
+  $ kubectl proxy
+  #+END_SRC
+
+  #+BEGIN_SRC bash
+  $ kubectl config current-context
+  $ kubectl config use-context mas-qa/oshift-api-jfk3-qa-bamtech-co:8443/yagrawal
+  $ kubectl config view
+  $ kubectl -n razcp-dev get deployment razcp-hello-world-app-chart -o yaml
+  $ kubectl get componentstatuses
+  #+END_SRC
+
 * References
   1. Kubernetes Up & Running book.
