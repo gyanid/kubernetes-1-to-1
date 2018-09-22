@@ -141,6 +141,35 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    #+END_SRC
 
 * Kubectl commands
+** Namespaces
+   Kubernetes uses =namespaces= to organize objects in the cluster. We
+   can think of each namespace as a folder that holds a set of
+   objects. By default, the kubectl command-line tool interacts with
+   the default namespace. We can pass =--namespace= flag to refer a
+   particular namespace.
+
+** Contexts
+   If we want to change the default namespace more permanently, we can
+   use a context. This gets recorded in a kubectl configuration file,
+   usually located at =$HOME/.kube/config=. This configuration file
+   also stores how to both find and authenticate to your cluster. For
+   example, we can create context with a different default namespace
+   for your kubectl commands using:
+
+   #+BEGIN_SRC bash
+   $ kubectl config set-context my-context --namespace=mystuff
+   #+END_SRC
+
+   This creates a new context, but it doesn't actually start using it
+   yet. To use this newly created context, we can run:
+   #+BEGIN_SRC bash
+   $ kubectl config use-context my-context
+   #+END_SRC
+
+   Contexts can also be used to manage different clusters or different
+   users for authenticating to those clusters using the =--users= or
+   =--clusters= flags with the =set-context= command.
+
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
   $ kubectl get nodes
