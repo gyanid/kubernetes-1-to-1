@@ -181,6 +181,9 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   $ kubectl get deployments --namespace=kube-system kubernetes-dashboard
   $ kubectl get services --namespace=kube-system
   $ kubectl proxy
+  $ kubectl get pods --no-headers
+  $ kubectl get pods -o yaml
+  $ kubecetl describe pods <my-pod>
   #+END_SRC
 
   #+BEGIN_SRC bash
