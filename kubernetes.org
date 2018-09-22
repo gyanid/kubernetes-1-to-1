@@ -104,6 +104,32 @@ NAME         DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTO
 kube-proxy   1         1         1         1            1           <none>          12d
    #+END_SRC
 
+** Kubernetes DNS
+   Kubernetes also runs a DNS server, which provides naming and
+   discovery for the services that are defined in the cluster. This
+   DNS server also runs as a replicated service on the
+   cluster. Depending on the size of your cluster, you may see one or
+   more DNS servers running in your cluster. The DNS service is run as
+   a Kubernetes deployment, which manages these replicas:
+   #+BEGIN_SRC bash
+   $ kubectl get deployments --namespace=kube-system kube-dns
+NAME       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kube-dns   1         1         1            1           12d
+   #+END_SRC
+
+   There is also a Kuberenetes service that performs load-balancing
+   for the DNS server:
+   #+BEGIN_SRC bash
+$ kubectl get services --namespace=kube-system kube-dns
+NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE
+kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
+   #+END_SRC
+
+   This shows that the DNS service for the cluster has the address
+   =10.96.0.10=. If we log into a container in the cluster, we will
+   see that the this has been polpulated into the =/etc/resolv.conf=
+   file for the container.
+
 * Kubectl commands
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
