@@ -191,6 +191,14 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    $ kubectl annotate pods bar color=red
    #+END_SRC
 
+** Debugging commands
+   #+BEGIN_SRC bash
+   $ kubectl logs <pod-name>
+   $ kubectl logs <pod-name> -f
+   $ kubectl exec -it <pod-name> -- bash
+   $ kubectl cp <pod-name>:/path/to/remote/file /path/to/local/file
+   #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -208,6 +216,10 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   $ kubecetl describe pods <my-pod>
   $ kubectl label pods <pod> color=red
   $ kubectl label pods <pod> label-
+  $ kubectl logs <pod-name>
+  $ kubectl logs <pod-name> -f
+  $ kubectl exec -it <pod-name> -- bash
+  $ kubectl cp <pod-name>:/path/to/remote/file /path/to/local/file
   #+END_SRC
 
   #+BEGIN_SRC bash
