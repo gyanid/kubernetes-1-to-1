@@ -130,6 +130,16 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    see that the this has been polpulated into the =/etc/resolv.conf=
    file for the container.
 
+** Kubernetes UI
+   The final kubernetes components is a GUI. The UI is run as a single
+   replica, but it is still managed by a Kubernetes deployment for
+   reliability and upgrades.
+
+   We can use the kubectl proxy to acces this UI.
+   #+BEGIN_SRC bash
+   $ kubectl proxy
+   #+END_SRC
+
 * Kubectl commands
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -137,6 +147,11 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   $ kubectl describe nodes node-1
   $ kubectl get daemonSets --namespace=kube-system kube-proxy
   $ kubectl get pods --namespace=kube-system
+  $ kubectl get deployments --namespace=kube-system kube-dns
+  $ kubectl get services --namespace=kube-system kube-dns
+  $ kubectl get deployments --namespace=kube-system kubernetes-dashboard
+  $ kubectl get services --namespace=kube-system
+  $ kubectl proxy
   #+END_SRC
 
   #+BEGIN_SRC bash
