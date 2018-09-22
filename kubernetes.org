@@ -199,6 +199,24 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    $ kubectl cp <pod-name>:/path/to/remote/file /path/to/local/file
    #+END_SRC
 
+* Pods
+  A pod represents a collection of application containers and volumes
+  running in the same execution environment. Pods, not containers, are
+  the smallest deployable artifact in a kubernetes cluster. This means
+  all of the containers in a Pod always land on the same machine.
+
+  Each container within a Pod runs in its own cgroup, but they share a
+  number of Linux namespaces.
+
+  Applications running in the same Pod share the same IP address and
+  port space (network namespace), have the same hostname (UTS
+  namespace), and can communicate using native interprocess
+  communication channels over System V IPC or POSIX message queues
+  (IPC namespace). However, applications in different Pods are
+  isolated from each other; they have different IP addresses,
+  different hostnames, and more. Containers in different Pods running
+  on the same node might as well be on different servers.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -220,6 +238,8 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   $ kubectl logs <pod-name> -f
   $ kubectl exec -it <pod-name> -- bash
   $ kubectl cp <pod-name>:/path/to/remote/file /path/to/local/file
+  $ kubectl help
+  $ kubectl help command-name
   #+END_SRC
 
   #+BEGIN_SRC bash
