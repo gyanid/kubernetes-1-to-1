@@ -6,5 +6,68 @@
 * Introduction
   Here will be learning kubernetes.
 
+* Concepts
+  - Kubernetes improves the development, delivery and maintenance of
+    distributed applications.
+
+  - Basics: pods, labels, annotations, services and replicasets.
+
+  - Advanced: Daemon sets, jobs, configMaps, Secrets.
+ 
+  - Deployments: lifecycly of a complete application.
+
+  - Storage.
+
+  - Based on three principles: immutability, declarative
+    configurationm and online self healing systems.
+
+  - Immutability: Once an artifact is created in the system it does
+    not change via user modifications.
+
+  - There are no incremental changes.
+
+  - Immutable container images are at the core of everything that we
+    will build in Kubernetes.
+
+  - Everything in kubernetes is a declarative configuration object
+    that represents the desired state of the system. It is kubernete's
+    job to ensure that the actual state of the world matches the
+    desired state.
+
+  - Imperative defines actions, declarative defines state.
+
+  - When it receives a desired state config, it does not take actions
+    to make the current state match the desired state. It continuously
+    takes actions to ensure that the curent state matches the desired
+    state.
+
+  - Combining three variable growth rates into a single growth rate
+    reduces statistical noise and produces a more reliable forecast of
+    expected growth.
+
+  - Efficiency can be measured by the ratio of the useful work
+    performed by machine or process to the total amount of energy
+    spent doing so.
+
+  - A dockerfile can be used to automate the creation of a Docker
+    container image.
+
+  - While designing a docker file, order your layers from least likely
+    to change to most likely to change in order to optimize the image
+    size for pushing and pulling.
+
+* Kubectl commands
+  #+BEGIN_SRC bash
+  $ kubectl get componentstatuses
+  #+END_SRC
+
+  #+BEGIN_SRC bash
+  $ kubectl config current-context
+  $ kubectl config use-context mas-qa/oshift-api-jfk3-qa-bamtech-co:8443/yagrawal
+  $ kubectl config view
+  $ kubectl -n razcp-dev get deployment razcp-hello-world-app-chart -o yaml
+  $ kubectl get componentstatuses
+  #+END_SRC
+
 * References
   1. Kubernetes Up & Running book.
