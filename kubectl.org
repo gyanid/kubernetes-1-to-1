@@ -1,4 +1,4 @@
-#+Title: Learning Kubernetes
+#+Title: Kubectl commands
 #+Date: <2018-09-22 Sat>
 #+Author: Yogesh Agrawal
 #+Email: yogeshiiith@gmail.com
