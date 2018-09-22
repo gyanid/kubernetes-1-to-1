@@ -184,6 +184,13 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    $ kubectl delete <resource-name> <obj-name>
    #+END_SRC
 
+** Labelling and annotating objects
+   #+BEGIN_SRC bash
+   $ kubectl label pods bar color=red
+   $ kubectl label pods bar color-
+   $ kubectl annotate pods bar color=red
+   #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
