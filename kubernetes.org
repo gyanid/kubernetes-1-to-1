@@ -669,6 +669,65 @@ volumes:
         path: "/exports"
     #+END_SRC
 
+** Putting it All Together
+   Many applications are stateful, and as such we must preserve any
+   data and ensure access to the underlying storage volume regardless
+   of what machine the application runs on. As we saw earlier, this
+   can be achieved using a persistent volume backed by
+   network-attached storage. We also want to ensure a healthy instance
+   of the application is running at all times, which means we want to
+   make sure the container running =kuard= is ready before we expose
+   it to clients.
+
+   Through a combination of persisten volumes, readiness and liveness
+   probes, and resource restrictions Kubernetes provides everything
+   needed to run stateful applications reliably.
+   #+BEGIN_SRC YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  volumes:
+    - name: "kuard-data"
+      nfs:
+        server: my.nfs.server.local
+        path: "/exports"
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "128Mi"
+        limits:
+          cpu: "1000m"
+          memory: "256Mi"
+      volumeMounts:
+        - mountPath: "/data"
+          name: "kuard-data"
+      livenessProbe:
+        httpGet:
+          path: /healthy
+          port: 8080
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        initialDelaySeconds: 30
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+   #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
