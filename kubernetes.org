@@ -458,6 +458,18 @@ spec:
     successful. Kubernetes will call the probe every 10 seconds. If
     more than three probes fail, the container will fail and restart.
 
+*** Readiness Probe
+    Kubernetes makes a distinction between =liveness= and
+    =readiness=. Liveness determines if an application is running
+    properly. Containers that fail liveness checks are
+    restarted. Readiness describes when a container is ready to serve
+    user requests. Containers that fail readiness checks are removed
+    from service load balancers. Readiness probes are configured
+    similarly to liveness probes.
+
+    Combining the readiness and liveness probes helps ensure only
+    health containers are running withih the cluster.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
