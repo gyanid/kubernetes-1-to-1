@@ -386,6 +386,12 @@ $ kubectl exec kuard date
 $ kubectl exec -it ash
     #+END_SRC
 
+*** Copying files to and from containers
+    #+BEGIN_SRC bash
+$ kubectl cp <pod-name>:/captures/capture3.txt ./capture3.txt
+$ kubectl cp $HOME/config.txt <pod-name>:/config.txt
+    #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
