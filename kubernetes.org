@@ -260,6 +260,74 @@ spec:
           protocol: TCP
    #+END_SRC
 
+** Running Pods
+   #+BEGIN_SRC bash
+$ kubectl apply -f kuard-pod.yaml
+   #+END_SRC
+
+   The Pod manifest will be submitted to Kubernetes API server. The
+   Kubernetes system will then schedule that Pod to run on a healthy
+   node in the cluster, where it will be monitored by the =kubelet=
+   daemon process.
+
+** Listing Pods
+   #+BEGIN_SRC bash
+$ kubectl get pods
+NAME                                     READY     STATUS        RESTARTS   AGE
+kuard                                    1/1       Running       0          7m
+   #+END_SRC
+
+   The =Pending= state indicates that the Pod has been submitted but
+   hasn't been scheduled yet.
+
+** Pod Details
+   #+BEGIN_SRC bash
+$ kubectl describe pods kuard
+   #+END_SRC
+   
+   This outputs a bunch of information about the Pod in different
+   sections. At the top is basic information about the Pod.
+   #+BEGIN_EXAMPLE
+   Name:         kuard
+Namespace:    default
+Node:         minikube/192.168.64.2
+Start Time:   Sun, 23 Sep 2018 10:57:17 +0100
+Labels:       <none>
+Annotations:  kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"name":"kuard","namespace":"default"},"spec":{"containers":[{"image":"gcr.io/kuar-demo/kua...
+Status:       Running
+IP:           172.17.0.8
+   #+END_EXAMPLE
+
+   Then there is information abuot the containers running in the Pod.
+   #+BEGIN_EXAMPLE
+   Containers:
+  kuard:
+    Container ID:   docker://b141a676a5c0537cfd967fc4fb0b4e0ec7b8c8a532c103a8b58f43aeeac3ec50
+    Image:          gcr.io/kuar-demo/kuard-amd64:1
+    Image ID:       docker-pullable://gcr.io/kuar-demo/kuard-amd64@sha256:3e75660dfe00ba63d0e6b5db2985a7ed9c07c3e115faba291f899b05db0acd91
+    Port:           8080/TCP
+    State:          Running
+      Started:      Sun, 23 Sep 2018 10:57:18 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-7vr8q (ro)
+   #+END_EXAMPLE
+
+   Finally, there are events related to the Pod, such as when it was
+   scheduled, when its image was pulled, and if/when it had to be
+   restarted because of failing health checks.
+   #+BEGIN_EXAMPLE
+   Events:
+  Type    Reason                 Age   From               Message
+  ----    ------                 ----  ----               -------
+  Normal  Scheduled              10m   default-scheduler  Successfully assigned kuard to minikube
+  Normal  SuccessfulMountVolume  10m   kubelet, minikube  MountVolume.SetUp succeeded for volume "default-token-7vr8q"
+  Normal  Pulled                 10m   kubelet, minikube  Container image "gcr.io/kuar-demo/kuard-amd64:1" already present on machine
+  Normal  Created                10m   kubelet, minikube  Created container
+  Normal  Started                10m   kubelet, minikube  Started container
+   #+END_EXAMPLE
 
 * Command cheatsheet
   #+BEGIN_SRC bash
