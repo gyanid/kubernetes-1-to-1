@@ -224,6 +224,43 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
    the containers. If the answer is "yes", multiple Pods is probably
    the correct solution.
 
+** The Pod manifest
+   Pods are described in a Pod manifest. The Pod manifest is just a
+   text-file representation of the Kubernetes API object.
+
+** Creating a Pod
+   #+BEGIN_SRC bash
+   $ kubectl run kuard --image=gcr.io/kuar-demo/kuard-amd64:1
+   $ kubectl get pods
+   $ kubectl delete deployments/kuard
+   #+END_SRC
+
+** Creating a Pod Manifest
+   Pod manifests can be written using YAML or JSON, but YAML is
+   generally preferred because it is slightly more human-editable and
+   has the ability to add comments.
+
+   Pod manifests include a couple of key fields and attributes: mainly
+   a =metadata= section for describing the Pod and its labels, a
+   =spec= section for describing volumes, and a list of containers
+   that will run in the Pod.
+
+   #+BEGIN_SRC YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+   #+END_SRC
+
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
