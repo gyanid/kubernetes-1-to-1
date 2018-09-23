@@ -522,6 +522,30 @@ spec:
     great deal of CPU, while the data synchronizer can make do with
     very little.
 
+    Requests are used when scheduling Pods to nodes. The Kubernetes
+    scheduler will ensure that the sum of all requests of all Pods on
+    a node does not exceed the capacity of the node. Therefore, a Pod
+    is guaranteed to have at least the requested resources when
+    running on the node. Importantly, "request" specifies a
+    minimum. It does not specify a maximum cap on the resources a Pod
+    may use.
+
+    CPU requests implemented using the =cpu-shares= functionality in
+    the Linux kernel.
+
+    Memory requests are handled similarly to CPU, but there is an
+    important difference. If a container is over its memory request,
+    the OS can't just remove memory from the process, because it's
+    been allocated. Consequently, when the system runs out of memory,
+    the =kubelet= terminates containers whose memory usage is greater
+    than their requested memory. These containers are automatically
+    restarted, but with less available memory on the machine for the
+    container to consume.
+
+    Since resource requests guarantee resource availability to a Pod,
+    they are critical to ensuring that containers have sufficient
+    resources in high-load situations.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
