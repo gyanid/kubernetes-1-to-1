@@ -448,6 +448,16 @@ spec:
           protocol: TCP
     #+END_SRC
 
+    The preceding Pod manifest uses an httpGet probe to perform an
+    HTTP GET request against the =/healthy= endpoint on port 8080 of
+    the kuard container. The probe sets an =initialDelaySeconds= of 5,
+    and thus will not be called until five seconds after all the
+    containers in the Pod are created. The probe must respond within
+    the one-second timeout, and the HTTP status code must be equal to
+    or greater than 200 and less than 400 to be considered
+    successful. Kubernetes will call the probe every 10 seconds. If
+    more than three probes fail, the container will fail and restart.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -471,6 +481,8 @@ spec:
   $ kubectl cp <pod-name>:/path/to/remote/file /path/to/local/file
   $ kubectl help
   $ kubectl help command-name
+  $ kubectl apply -f pod-manifest.yaml
+  $ kubectl port-forward <pod-name> 8080:8080
   #+END_SRC
 
   #+BEGIN_SRC bash
