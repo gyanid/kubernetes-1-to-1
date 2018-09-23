@@ -329,6 +329,24 @@ IP:           172.17.0.8
   Normal  Started                10m   kubelet, minikube  Started container
    #+END_EXAMPLE
 
+** Deleting a Pod
+   #+BEGIN_SRC bash
+$ kubectl delete pods/kuard
+$ kubectl delete -f kuard-pod.yaml
+   #+END_SRC
+
+   All Pods have a termination =grace period=. By default, this is 30
+   seconds. When a Pod is transitioned to =Terminating= it no longer
+   receives new requests. In a serving scenario, the grace period is
+   important for reliability because it allows the Pod to finish any
+   active requests that it may be in the middle of processing before
+   it is terminated.
+   
+   It's important to note that when you delete a Pod, any data stored
+   in the containers associated with that Pod will be deleted as
+   well. If you want to persist data across multiple instances of a
+   Pod, you need to use =PersistentVolumes=.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
