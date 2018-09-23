@@ -904,6 +904,9 @@ metadata:
   $ kubectl help command-name
   $ kubectl apply -f pod-manifest.yaml
   $ kubectl port-forward <pod-name> 8080:8080
+  $ kubectl label deployments alpaca-test "canary=true"
+  $ kubectl label deployments alpaca-test "canary=true"
+  $ kubectl get pods --selector="app in (alpaca,bandicoot)"
   #+END_SRC
 
   #+BEGIN_SRC bash
