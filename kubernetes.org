@@ -568,6 +568,45 @@ spec:
           name: http
           protocol: TCP
     #+END_SRC
+    
+** Persisting Data with Volumes
+   When a Pod is deleted or a container restarts, any and all data in
+   the container's filesystem is also deleted. This is often a good
+   thing, since we don't want to leave around cruft that happened to
+   be written by our stateless web application.
+
+*** Using Volumes with Pods
+    To add a volume to a Pod manifest, there are two new stanzas to
+    add to our configuration. The first is a new =spec.volumes=
+    section. This array defines all of the volumes that may be
+    accessed by containers in the Pod manifest. It's important to note
+    that not all containers are required to mount all volumes defined
+    in the Pod. The second addition is the =volumeMounts= array in the
+    container definition. This array defines the volumes that are
+    mounted into a particular container, and the path where each
+    volume should be mounted. Note that two different containers in a
+    Pod can mount the same volume at different mount paths.
+    #+BEGIN_SRC YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  volumes:
+    - name: "kuard-data"
+      hostPath:
+        path: "/var/lib/kuard"
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      volumeMounts:
+        - mountPath: "/data"
+          name: "kuard-data"
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+    #+END_SRC
 
 * Command cheatsheet
   #+BEGIN_SRC bash
