@@ -470,6 +470,19 @@ spec:
     Combining the readiness and liveness probes helps ensure only
     health containers are running withih the cluster.
 
+*** Types of health checks
+    Kubernets also supports =tcpSocket= health checks that open a TCP
+    socket; if the connection is successful, the probe succeeds. This
+    style of probe is useful for non-HTTP applications; for example,
+    databases or other non-HTTP-based APIs.
+
+    Finally, Kubernetes allows exec probes. These executes a script or
+    program in the context of the container. Following typical
+    conventions, if this script returns a zero exit code, the probe
+    succeeds; otherwise, it fails. =exec= scripts are often useful for
+    custom application validation logic that doesn't fit nearly into
+    an HTTP call.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
