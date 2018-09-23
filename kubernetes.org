@@ -608,6 +608,44 @@ spec:
           protocol: TCP
     #+END_SRC
 
+*** Different ways of using volumes with Pods
+    Following are a few, and the recommended patters for Kubernetes.
+
+**** Communication/synchronization
+     To share a volume between two containers, the Pod uses an
+     =emptyDir= volume. Such a volume is scoped to the Pod's lifespan,
+     but it can be shared between two containers, forming the basis
+     for communication between the two containers. Example our Git
+     sync and web serving containers.
+
+**** Cache
+     An application may use a volume that is valuable for performance,
+     but not required for correct operation of the application. For
+     example, perhaps the application keeps prerendered thumbnails of
+     larger images. Of course, they can be reconstructed from the
+     original images, but that makes serving the thumbnails more
+     expensive. You want such a cache to survive a container restart
+     dut to health check failure, and thus =emptyDir= works well for
+     the cache use case as well.
+
+**** Persistent Data
+     Sometimes you will use a volume for truly persistent data - data
+     that is independent of the lifespan of a particular Pod, and
+     should move between nodes in the cluster if a node fails or a Pod
+     moves to a different machine for some reason. To achieve this,
+     Kubernetes supports a wide variety of remote network storage
+     volumes, including widely supported protocols like NFS or iSCSI
+     as well as cloud provider network storage like AWS EBS, and
+     others.
+
+**** Mounting the host filesystem
+     Other applications don't actually need a persistent volume, but
+     they do need some access to the underlying host filesystem. For
+     example, they may need access to the =/dev= filesystem in order
+     to perform raw block-level access to a device on the system. For
+     these cases, Kubernetes supports the =hostDir= volume, which can
+     mount arbitrary locations on the worker node into the container.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
