@@ -646,6 +646,29 @@ spec:
      these cases, Kubernetes supports the =hostDir= volume, which can
      mount arbitrary locations on the worker node into the container.
 
+*** Persisting Data Using Remote Disks
+    Oftentimes, you want the data a Pod is using to stay with the Pod,
+    even if it is restarted on a different host machine.
+
+    To achieve this, you can mount a remote network storage volume
+    into your Pod. When using network-based storage, Kubernetes
+    automatically mounts and unmounts the appropriate storage whenever
+    a Pod using that volume is scheduled onto a particular machine.
+
+    There are numerous methods for mounting volumes over the
+    network. Kubernetes includes support for standard protocols such
+    as NFS and iSCSI as well as cloud provider-based storage APIs for
+    the major cloud providers.
+    #+BEGIN_SRC YAML
+...
+# Rest of pod definition above here
+volumes:
+    - name: "kuard-data"
+      nfs:
+        server: my.nfs.server.local
+        path: "/exports"
+    #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
