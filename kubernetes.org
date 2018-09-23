@@ -773,6 +773,12 @@ spec:
    |-------------------------------+-------|
    | kubernetes.io/cluster-service |  true |
    |-------------------------------+-------|
+
+   #+BEGIN_SRC bash
+$ kubectl label deployments alpaca-test "canary=true"
+$ kubectl get deployments -L canary
+$ kubectl label deployments alpaca-test "canary-"
+   #+END_SRC
      
   
 * Command cheatsheet
