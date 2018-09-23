@@ -392,6 +392,17 @@ $ kubectl cp <pod-name>:/captures/capture3.txt ./capture3.txt
 $ kubectl cp $HOME/config.txt <pod-name>:/config.txt
     #+END_SRC
 
+    Generally speaking, copying files into a container is an
+    antipattern. We really should treat the contents of a container as
+    immutable. But occasionally it's the most immediate way to stop
+    the bleeding and restore your service to health, since it is
+    quicker than building, pushing, and rolling out a new image. Once
+    the bleeding stopped, however, it is critically important that we
+    immediately go and do the image build and rollout, or we are
+    guaranteed to forget the local change that we made to our
+    container and overwrite it in the subsequent regularly scheduled
+    rollout.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
