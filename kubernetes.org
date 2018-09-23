@@ -476,12 +476,51 @@ spec:
     style of probe is useful for non-HTTP applications; for example,
     databases or other non-HTTP-based APIs.
 
-    Finally, Kubernetes allows exec probes. These executes a script or
-    program in the context of the container. Following typical
+    Finally, Kubernetes allows =exec= probes. These executes a script
+    or program in the context of the container. Following typical
     conventions, if this script returns a zero exit code, the probe
     succeeds; otherwise, it fails. =exec= scripts are often useful for
     custom application validation logic that doesn't fit nearly into
     an HTTP call.
+
+** Resource Management
+*** Resource Requests: Minimum required resources
+    A pod requests the resources required to run its
+    containers. Kubernetes guarantees that these resources are
+    available to the Pod. The most commonly requested resources are
+    CPU and memory, but Kubernetes has support for other resource
+    types as well, such as GPUs and more.
+
+    For example, to request that the kuard container lands on a
+    machine with half a CPU free and gets 128 MB of memory allocated
+    to it, we define the Pod as follows:
+    #+BEGIN_SRC YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "128Mi"
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+    #+END_SRC
+
+    Note: Resources are requested oer container, not per Pod. The
+    total resources requested by the Pod is the sum of all resources
+    requested by all containers in the Pod. The reason for this is
+    that in many cases the different containers have very different
+    CPU requriements. For example, in the web server and data
+    synchronizer Pod, the web server is user-facing and likely needs a
+    great deal of CPU, while the data synchronizer can make do with
+    very little.
 
 * Command cheatsheet
   #+BEGIN_SRC bash
