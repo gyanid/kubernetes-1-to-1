@@ -347,6 +347,45 @@ $ kubectl delete -f kuard-pod.yaml
    well. If you want to persist data across multiple instances of a
    Pod, you need to use =PersistentVolumes=.
 
+** Accessing your Pod
+*** Using Port Forwarding
+    We can use the port-forwarding support built into the Kubernetes
+    API and command-line tools. When we run
+    #+BEGIN_SRC bash
+$ kubectl port-forward kuard 8080:8080
+    #+END_SRC
+    a secure tunnel is created from our local machine, through the
+    Kubernetes master, to the instance of the Pod running on one of
+    the worker nodes.
+
+*** Getting more info with logs
+    When application needs debugging, it's helpful to be able to dig
+    deeper that =describe= to understand what the application is
+    doing. Kubernetes provides two commands for debugging running
+    containers. The =kubectl logs= command downloads the current logs
+    from the running instance:
+    #+BEGIN_SRC bash
+$ kubectl logs kuard
+    #+END_SRC
+
+    Adding the =-f= flag will cause you to continuously stream
+    logs. The =kubectl logs= command always tries to get logs from the
+    currently running container. Adding the =--previous= flag will get
+    logs from a previous instance of the container.
+
+*** Running commands in container with exec
+    Sometimes logs are insufficient, and to truly determine what's
+    going on you need to execute commands in the context of the
+    container itself.
+    #+BEGIN_SRC bash
+$ kubectl exec kuard date
+    #+END_SRC
+    
+    You can also get an interactive session by adding the =-it= flags.
+    #+BEGIN_SRC bash
+$ kubectl exec -it ash
+    #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
