@@ -217,6 +217,13 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   different hostnames, and more. Containers in different Pods running
   on the same node might as well be on different servers.
 
+** Thinking with Pods
+   In general, the right question to ask yourself when designing Pods
+   is, "Will these containers work correctly if they land on different
+   machines? If the answer is "no", a Pod is the correct grouping for
+   the containers. If the answer is "yes", multiple Pods is probably
+   the correct solution.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
