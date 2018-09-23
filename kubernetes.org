@@ -745,6 +745,36 @@ spec:
    Once a Pod is scheduled to a node, no rescheduling occurs if that
    node fails.
 
+* Labels and Annotations
+** Labels
+   Labels provide identifying metadata for objects. These are
+   fundamental qualities of the object that will be used for grouping,
+   viewing, and operating.
+
+   Labels have simple syntax. They are key/value pairs where both the
+   key and value are represented by strings. Label keys can be broken
+   down into two parts: an optional prefix and a name, separated by a
+   slash. The prefix, if specified, must be shorter that 63
+   characters. Names must also start and end with an alphanumeric
+   character and permit the use of dashes (-), underscores (_), and
+   dots (.) between characters.
+
+   Label values are strings with a maximum length of 63
+   characters. The contents of the label values follow the same rules
+   as for label keys.
+   |-------------------------------+-------|
+   | Key                           | Value |
+   |-------------------------------+-------|
+   | acme.com/app-version          | 1.0.0 |
+   |-------------------------------+-------|
+   | appVersion                    | 1.0.0 |
+   |-------------------------------+-------|
+   | app.Version                   | 1.0.0 |
+   |-------------------------------+-------|
+   | kubernetes.io/cluster-service |  true |
+   |-------------------------------+-------|
+     
+  
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
