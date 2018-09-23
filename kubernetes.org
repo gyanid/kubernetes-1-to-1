@@ -728,6 +728,23 @@ spec:
         failureThreshold: 3
    #+END_SRC
 
+** Summary
+   Pods represent the atomic unit of work in a Kubernestes
+   cluster. Pods are comprised of one or more containers working
+   together symbiotically. To create a Pod, you write a Pod manifest
+   and submit it to the Kubernetes API server by using the
+   command-line tool.
+
+   Once you have submitted the manifest to the API server, the
+   Kubernetes scheduler finds a machine where the Pod can fit and
+   schedules the Pod to that machine. Once scheduled, the =kubelet=
+   daemon on that machine is responsible for creating the containers
+   that correspond to the Pod, as well as performing any health checks
+   defined in the Pod manifested.
+
+   Once a Pod is scheduled to a node, no rescheduling occurs if that
+   node fails.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
