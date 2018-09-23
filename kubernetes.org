@@ -774,11 +774,42 @@ spec:
    | kubernetes.io/cluster-service |  true |
    |-------------------------------+-------|
 
-   #+BEGIN_SRC bash
+*** Applying labels
+    1. Apply label to a deployment.
+       #+BEGIN_SRC bash
 $ kubectl label deployments alpaca-test "canary=true"
+       #+END_SRC
+    2. Show a label value as a column
+       #+BEGIN_SRC bash
 $ kubectl get deployments -L canary
+       #+END_SRC
+    3. Remove a label
+       #+BEGIN_SRC bash
 $ kubectl label deployments alpaca-test "canary-"
-   #+END_SRC
+       #+END_SRC
+    4. Select objects based on labels
+       #+BEGIN_SRC bash
+$ kubectl get pods --selector="ver=2,app=bandicoot"
+$ kubectl get pods --selector="app in (alpaca,bandicoot)"
+$ kubectl get deployments --selector="canary" # set to anything
+       #+END_SRC
+
+   Following are the selector operators
+   |----------------------------+------------------------------------|
+   | Operator                   | Description                        |
+   |----------------------------+------------------------------------|
+   | key=value                  | key is set to value                |
+   |----------------------------+------------------------------------|
+   | key!=value                 | key is not set to value            |
+   |----------------------------+------------------------------------|
+   | key in (value1, value2)    | key is one of value1 or value2     |
+   |----------------------------+------------------------------------|
+   | key notin (value1, value2) | key is not one of value1 or value2 |
+   |----------------------------+------------------------------------|
+   | key                        | key is set                         |
+   |----------------------------+------------------------------------|
+   | !key                       | key is not set                     |
+   |----------------------------+------------------------------------|
      
   
 * Command cheatsheet
