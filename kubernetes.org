@@ -403,6 +403,51 @@ $ kubectl cp $HOME/config.txt <pod-name>:/config.txt
     container and overwrite it in the subsequent regularly scheduled
     rollout.
 
+** Health Checks
+   When we run application as a container in Kubernetes, it is
+   automatically kept alive for you using a =process health
+   check=. This health check simply ensures that the main process of
+   our application is always running. If it isn't, Kubernetes restarts
+   it.
+
+   However, in some cases, a simple process check is insufficient. For
+   example, if our process has deadlocked and is unable to serve
+   requests, a process health check will still believe that the
+   application is healthy since its process is still running.
+
+   To address this, Kubernetes introduced health checks for
+   application =liveness=. Liveness health checks run
+   application-specific logic to verify that the application is not
+   just still running, but is functioning properly. We have to define
+   this liveness health checks in the pod manifest.
+
+*** Liveness Probe
+    Liveness probes are defined per container, which means each
+    container inside a Pod is health-checked separately.
+
+    #+BEGIN_SRC YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      livenessProbe:
+        httpGet:
+          path: /healthy
+          port: 8080
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+    #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
