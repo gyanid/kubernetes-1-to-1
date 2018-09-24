@@ -1021,6 +1021,64 @@ $ kubectl get endpoints alpaca-prod --watch
    server can signal that it no longer wants traffic, wait until
    existing connections are closed, and then cleanly exit.
 
+** Looking beyond the cluster
+   So far we have seen how to expose services inside a
+   cluster. Oftentimes the IPs for pods are only reachable from within
+   the cluster. At some point, we have to allow new traffic in!
+
+   The most portable way to do this is to use a feature called
+   =NodePorts=, which enhance a service even further. In addition to a
+   cluster IP, the system picks a port (or the user can specify one),
+   and every node in the cluster then forwards traffic to that port to
+   the service.
+
+   With this feature, if we can reach any node in the cluster, we can
+   contact a service. We use the =NodePort= without knowing where any
+   of the Pods for that service are running. This can be integrated
+   with hardware or software load balancers to expose the service
+   further.
+
+   Edit alpaca-prod service:
+   #+BEGIN_SRC bash
+$ kubectl edit service alpaca-prod
+   #+END_SRC
+
+   Change the =spec.type= field to =NodePort=. We can also do this
+   when creating the service via =kubectl expose= by specifying the
+   =--type=NodePort=. This system will assign a new NodePort:
+   #+BEGIN_SRC bash
+$ kubectl describe service alpaca-prod
+Name:                     alpaca-prod
+Namespace:                default
+Labels:                   app=alpaca
+                          env=prod
+                          ver=1
+Annotations:              <none>
+Selector:                 app=alpaca,env=prod,ver=1
+Type:                     NodePort
+IP:                       10.108.179.51
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  32362/TCP
+Endpoints:                172.17.0.10:8080,172.17.0.3:8080,172.17.0.7:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+   #+END_SRC
+
+   Here we see that the system assigned port 32362 to this
+   service. Now we can hit any of our cluster nodes on that port to
+   access the service. We can do ssh tunneling with something like
+   this:
+   #+BEGIN_SRC bash
+$ ssh <node> -L 8080:localhost:32362
+   #+END_SRC
+
+   Now we can connect to that service with =http://localhost:8080=.
+
+   Each request that we send to the service will be randomly directed
+   to one of the Pods that implement the service.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
