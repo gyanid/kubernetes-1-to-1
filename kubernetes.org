@@ -1160,6 +1160,31 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
    address. But keeping the correct set of labels to use in sync can
    be tricky. That is why the =Service= object was created.
 
+** Kube-proxy and Cluster IPs
+   Cluster Ips are stable virtual IPs that load-balance traffic across
+   all of the endpoints in a service. This is performed by a component
+   running on every node in the cluster called the =kube-proxy=.
+
+   The =kube-proxy= watches for new services in the cluster via the
+   API server. It then programs a set of =iptables= rules in the
+   kernel of that host to rewrite the destination of packets so they
+   are directed at one of the endpoints for that service. If the set
+   of endpoints for a service changes (due to pods coming and going or
+   due to a failed readiness check) the set of =iptables= rules is
+   rewritten.
+
+   The cluster IP itself is usually assigned by the API server as the
+   service is created. However, when creating a service, the user can
+   specify a specific cluster IP. Once set, the cluster IP cannot be
+   modified without deleting and recreating the =Service= object.
+
+   Note: The kubernetes service address range is configured using the
+   =--service-cluster-ip-range= falg on the =kube-apiserver=
+   binary. The service address range should not overlap with the IP
+   subnets and ranges assigned to each Docker bridge or kubernetes
+   node. In addition, any explicit cluster IP requested must come from
+   that range and not already be in use.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
