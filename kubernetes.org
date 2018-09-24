@@ -1333,6 +1333,29 @@ spec:
    controller creates and submits a pod manifest based on the pod
    template directly to the API server.
 
+** Inspecting a ReplicaSet
+   #+BEGIN_SRC bash
+$ kubectl describe rs kuard
+   #+END_SRC
+
+** Finding a ReplicaSet from a Pod
+   ReplicaSet controller adds an annotation to every pod that is
+   creates. They key for the annotation is =kubernetes.io/created-by=
+   #+BEGIN_SRC bash
+$ kubectl get pods <pod-name> -o yaml
+   #+END_SRC
+   
+** Finding a set of pods for a replicaset
+   Get the set of labels using the =kubectl describe rs <rs-name>=
+   command. Then find the pods that match this selector, using the
+   =--selector= flag or shorthand =-l=:
+   #+BEGIN_SRC bash
+$ kubectl get pods -l app=kuard,version=2
+   #+END_SRC
+
+   This is exactly the same query that the replicaset executes to
+   determine the current number of pods.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
