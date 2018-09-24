@@ -1298,6 +1298,31 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
     deletion. Your application's behavior shouldn't change because of
     such a scale-down operation.
 
+** ReplicaSet Spec
+   ReplicaSets are defined using a specification. All ReplicaSets must
+   have a unique name (defined using the metadata.name field), a
+   =spec= section that describes the number of Pods (replicas) that
+   should be running cluster-wide at a given time, and a Pod template
+   that describes the Pod to be created when the defined number of
+   replicas is not met. Following is a minimal example:
+   #+BEGIN_SRC YAML
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: kuard
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kuard
+        version: "2"
+    spec:
+      containers:
+        - name: kuard
+          image: "gcr.io/kuar-demo/kuard-amd64:2"   
+   #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
