@@ -1403,6 +1403,19 @@ $ kubectl get hpa
     clash, when you and an autoscaler are attempting to modify the
     number of replicas.
     
+** Deleting replicaset
+   By default deleting a replicaset also deletes the pods that are
+   managed by the replicaset:
+   #+BEGIN_SRC bash
+$ kubectl delete rs kuard
+   #+END_SRC
+
+   To avoid deletion of pods and to just delete the replicaset object,
+   we can set =--cascade= to false.
+   #+BEGIN_SRC bash
+$ kubectl delete rs kuard --cascade=false
+   #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
