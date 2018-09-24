@@ -921,6 +921,14 @@ kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP    13d       
    called a cluster IP. This is a special IP address the system will
    load-balance across all of the pods that are identified by the
    selector.
+   
+   To interact with services, we are going to port-forward to one of
+   the alpaca pods. Start and leave this command running in a terminal
+   window.
+   #+BEGIN_SRC bash
+$ ALPACA_PROD=$(kubectl get pods -l app=alpaca -o jsonpath='{.items[0].metadata.name}')
+$ kubectl port-forward $ALPACA_PROD 48858:8080
+   #+END_SRC
 
 ** Service DNS
    Because the cluster IP is virtual it is stable and it is
@@ -952,6 +960,66 @@ kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP    13d       
    the service name (alpaca-prod). We can also refer to a service in
    another namespace with =alpaca-prod.default=. We can also use the
    fully qualified service name as well.
+
+** Readiness Checks
+   One nice thing the =Service= does is track which of your pods are
+   ready via a readiness check.
+
+   Let's modify our deployment to add a readiness check:
+   #+BEGIN_SRC bash
+$ kubectl edit deployment/alpaca-prod
+   #+END_SRC
+   #+BEGIN_SRC YAML
+spec:
+ ...
+ template:
+  ...
+  spec:
+    containers:
+      ...
+      name: alpaca-prod
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        periodSeconds: 2
+        initialDelaySeconds: 0
+        failureThreshold: 3
+        successThreshold: 1 
+   #+END_SRC
+
+   Only ready pods are sent traffic.
+
+   Updating the deployment definition like this will delete and
+   recreate the alpaca pods. As such, we need to restart our
+   port-forward command from earlier.
+   #+BEGIN_SRC bash
+$ ALPACA_PROD=$(kubectl get pods -l app=alpaca -o jsonpath='{.items[0].metadata.name}')
+$ kubectl port-forward $ALPACA_PROD 48858:8080
+   #+END_SRC
+
+   Now open the browser to =http://localhost:48858=.
+   
+   In another terminal window, start a =watch= command on the
+   endpoints for the =alpaca-prod= service. Endpoints are a
+   lower-level way of finding what a service is sending traffic to.
+   #+BEGIN_SRC bash
+$ kubectl get endpoints alpaca-prod --watch  
+   #+END_SRC
+   The =--watch= option here causes the kubectl command to hang around
+   and output any updates.
+
+   Now go back to your browser and hit the "fail" link for the
+   readiness check. After three of these this server is removed from
+   the list of endpoints for the service. Hit the "Succeed" link and
+   notice that after a single readiness check the endpoint is added
+   back.
+
+   This readiness check is a way for an overloaded or sick server to
+   signal to the system that it doesn't want to receive traffic
+   anymore. This is a great way to implement graceful shutdown. The
+   server can signal that it no longer wants traffic, wait until
+   existing connections are closed, and then cleanly exit.
 
 * Command cheatsheet
   #+BEGIN_SRC bash
