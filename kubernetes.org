@@ -1271,6 +1271,20 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
     imperative pod to a replicated set of pods managed by a
     ReplicaSet.
 
+*** Quarantining Containers
+    Oftentimes, when a server misbehaves, Pod-level health checks will
+    automatically restart the Pod. But if the health checks are
+    incomplete, a Pod can be misbehaving but still be part of the
+    replicated set. In these situations, while it would work to simply
+    kill the Pod, that would leave your developers with only logs to
+    debug the problem. Instead, you can modify the set of labels on
+    the sick Pod. Doing so will disassociate it from the ReplicaSet
+    (and service) so that you can debug the pod. The ReplicaSet
+    contoller will notice that a pod is missing and create a new copy,
+    but because the pod is still running, it is available to
+    developers for interactive debugging, which is significantly more
+    valuable than debugging from logs.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
