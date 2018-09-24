@@ -1285,6 +1285,19 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
     developers for interactive debugging, which is significantly more
     valuable than debugging from logs.
 
+*** Designing with ReplicaSets
+    ReplicaSets are designed to represent a single, scalable
+    microservice inside your architecture. The key characteristic of
+    ReplicaSets is that every pod that is created by the replicaset
+    controller is entirely homogeneous. Typically, these pods are then
+    fronted by a kubernetes serviece load balancer, which spreads
+    traffic across the pods that make up the service. Generally
+    speaking, ReplicaSets are designed for stateless services. The
+    elements created by the ReplicaSet are interchangeable; when a
+    ReplicaSet is sclaed down, an arbitrary pod is selected for
+    deletion. Your application's behavior shouldn't change because of
+    such a scale-down operation.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
