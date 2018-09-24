@@ -1246,6 +1246,31 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
    current state of the world and taking action to try to make the
    observed state match the desired state.
 
+** Relating Pods and ReplicaSets
+   The relationship between ReplicaSets and Pods is loosely decoupled.
+   ReplicaSet create and manage Pods, they do not own the Pods they
+   create. ReplicaSets use label queries to identify the set of Pods
+   they should be managing. They then use the exact same Pod API that
+   we use to create the Pods. Decoupling enables several important
+   behaviors:
+
+*** Adopting Existing Containers
+    Early on we may be simply deploying a single pod with a container
+    image without a ReplicaSet managing it. But at some point we may
+    want to expand our singleton container into a replicated service
+    and create and manage an array of similar containers. We may have
+    even defined a load balancer that is serving traffic to that
+    single pod. If ReplicaSets owned the Pods they created, then the
+    only way to start replicating our pod would be to detect it and
+    then relaunch it via a ReplicaSet. This might be disruptive, as
+    there would be a moment in time when there would be no copies of
+    our container running. However, because ReplicaSets are decoupled
+    from the Pods they manage, we can simply create a ReplicaSet that
+    will "adopt" the existing pod, and scale out additional copies of
+    those containers. In this way we can seamlessly move from a single
+    imperative pod to a replicated set of pods managed by a
+    ReplicaSet.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
