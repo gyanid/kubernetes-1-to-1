@@ -1356,6 +1356,53 @@ $ kubectl get pods -l app=kuard,version=2
    This is exactly the same query that the replicaset executes to
    determine the current number of pods.
 
+** Scaling ReplicaSets
+*** Imperative scaling
+    #+BEGIN_SRC bash
+$ kubectl scale --replicas=4 rs/kuard
+    #+END_SRC
+    Any imperative changes should immediately be followed by a
+    declarative change in source control.
+
+*** Declarative Scaling with kubectl apply
+    Make changes to the configuration file in version control and then
+    apply those changes to our cluster.
+    #+BEGIN_SRC bash
+$ kubectl apply -f kuard-rs.yaml
+    #+END_SRC
+
+*** Autoscaling a replicaset
+    "HPA" - horizontal pod scaling requires the presence of the
+    =heapster= Pod on your cluster. =heapster= keeps track of metrics
+    and provides an API for consuming metrics HPA uses when scaling
+    decisions. Most installation of kubernetes include =heapster= by
+    default, in the =kube-system= namespace.
+    
+    If the heapster pod is not present, autoscaling will not work
+    correctly.
+
+    Vertical scaling is not currently implmented in Kubernetes.
+
+    To scale a replicaset based on CPU:
+    #+BEGIN_SRC bash
+$ kubectl autoscale rs kuard --min=2 --max=5 --cpu-percent=80
+    #+END_SRC
+
+    This command creates an autoscaler that scales between two and
+    five replicas with a CPU threshold of 80%.
+
+    To view, modiy, or delete this resource we can use the standard
+    kubectl commands and the =horizontalpodautoscalers= resource =
+    =hpa=.
+    #+BEGIN_SRC bash
+$ kubectl get hpa
+    #+END_SRC
+
+    It's a bad idea to combine both autoscaling and imperative or
+    declarative management of the number of replicas. It might lead to
+    clash, when you and an autoscaler are attempting to modify the
+    number of replicas.
+    
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -1386,6 +1433,8 @@ $ kubectl get pods -l app=kuard,version=2
   $ kubectl get pods --selector="app in (alpaca,bandicoot)"
   $ kubectl run bandicoot-staging --image=gcr.io/kuar-demo/kuard-amd64:2 --replicas=1 --labels="ver=2,app=bandicoot,env=staging"
   $ kubectl delete services,deployments -l app
+  $ kubectl scale --replicas=1 rs/kuard
+  $ kubectl autoscale rs kuard --min=2 --max=5 --cpu-percent=80
   #+END_SRC
 
   #+BEGIN_SRC bash
