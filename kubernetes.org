@@ -879,6 +879,46 @@ metadata:
     coupling. However, they should be used judiciously to avoid an
     untyped mess of data.
 
+* Service Discovery
+  While the dynamic nature of Kubernetes makes it easy to run a lot of
+  things, it creates problems when it comes to finding those
+  things. Most of the traditional network infrastructure wasn't build
+  for the level of dynamism that Kubernetes presents.
+
+** DNS as Service Discovery
+   Service discovery tools help solve the problem of finding which
+   processes are listening at which addresses for which services.
+
+   The DNS is the traditional system of service discovery on the
+   internet. DNS is designed for relatively stable name resolution
+   with wide and efficient caching. It is a great system for the
+   internet but falls short in the dynamic world of Kubernetes.
+
+** The Service Object
+   A =Service object= is a way to create a named label selector. Just
+   as the =kubectl run= command is an easy way to create a Kubernetes
+   deployment, we can use =kubectl expose= to create a service.
+   #+BEGIN_SRC bash
+$ kubectl run alpaca-prod --image=gcr.io/kuar-demo/kuard-amd64:1 --replicas=3 --port=8080 --labels="ver=1,app=alpaca,env=prod"
+$ kubectl expose deployment alpaca-prod
+$ kubectl run bandicoot-prod --image=gcr.io/kuar-demo/kuard-amd64:2 --replicas=2 --port=8080 --labels="ver=2,app=bandicoot,env=prod"
+$ kubectl expose deployment bandicoot-prod
+$ kubectl get services -o wide
+NAME             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE       SELECTOR
+alpaca-prod      ClusterIP   10.108.179.51   <none>        8080/TCP   6m        app=alpaca,env=prod,ver=1
+bandicoot-prod   ClusterIP   10.97.117.93    <none>        8080/TCP   4m        app=bandicoot,env=prod,ver=2
+kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP    13d       <none>
+   #+END_SRC
+
+   The =kubectl expose= command conveniently pull both the label
+   selector and the relevant ports (8080, in this case) from the
+   deployment definition.
+
+   Furthermore, that service is assigned a new type of virtual IP
+   called a cluster IP. This is a special IP address the system will
+   load-balance across all of the pods that are identified by the
+   selector.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -907,6 +947,7 @@ metadata:
   $ kubectl label deployments alpaca-test "canary=true"
   $ kubectl label deployments alpaca-test "canary=true"
   $ kubectl get pods --selector="app in (alpaca,bandicoot)"
+  $ kubectl run bandicoot-staging --image=gcr.io/kuar-demo/kuard-amd64:2 --replicas=1 --labels="ver=2,app=bandicoot,env=staging"
   #+END_SRC
 
   #+BEGIN_SRC bash
