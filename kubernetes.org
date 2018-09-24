@@ -1323,6 +1323,16 @@ spec:
           image: "gcr.io/kuar-demo/kuard-amd64:2"   
    #+END_SRC
 
+** Pod Templates
+   When the number of Pods in the current state is less than the
+   number of Pods in the desired state, the ReplicaSet controller will
+   create new Pods. The pods are created using a pod template that is
+   contained in the replicaset specification. The pods are created in
+   exactly the same manner as when we crated a pod from a yaml
+   file. But instead of using a file, the kubernetes replicaset
+   controller creates and submits a pod manifest based on the pod
+   template directly to the API server.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
