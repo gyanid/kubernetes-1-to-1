@@ -1232,6 +1232,7 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
   $ kubectl label deployments alpaca-test "canary=true"
   $ kubectl get pods --selector="app in (alpaca,bandicoot)"
   $ kubectl run bandicoot-staging --image=gcr.io/kuar-demo/kuard-amd64:2 --replicas=1 --labels="ver=2,app=bandicoot,env=staging"
+  $ kubectl delete services,deployments -l app
   #+END_SRC
 
   #+BEGIN_SRC bash
