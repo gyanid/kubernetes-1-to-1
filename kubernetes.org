@@ -1203,6 +1203,12 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
    environment variables seems strange to many users. For this reason,
    DNS is probably the better option.
 
+** Summary
+   The =Service= object provides a flexible and powerful way to expose
+   services both within the cluster and beyond. With these techniques
+   we can connect services to each other and expose them outside the
+   cluster.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
