@@ -1236,6 +1236,16 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
   rescheduled under certain failure conditions such as node failures
   and network partitions.
 
+** Reconciliation Loops
+   The central concepts behind a reconciliation loop is the notion of
+   =desired= state and =observed= or =current= state. Desired state is
+   the state we want. With a ReplicaSet it is the desired number of
+   replicas and the definition of the Pod to replicate.
+
+   The reconciliation loop is constantly running, observing the
+   current state of the world and taking action to try to make the
+   observed state match the desired state.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
