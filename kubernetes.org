@@ -1079,6 +1079,53 @@ $ ssh <node> -L 8080:localhost:32362
    Each request that we send to the service will be randomly directed
    to one of the Pods that implement the service.
 
+** Endpoints
+   Some applications want to be able to use services without using a
+   cluster IP. This is done with another type of object called
+   =Endpoints=. For every =Service= object, kubernetes creates a buddy
+   =Endpoints= object that contains the IP addresses for that service.
+   #+BEGIN_SRC bash
+$ kubectl describe endpoints alpaca-prod
+Name:         alpaca-prod
+Namespace:    default
+Labels:       app=alpaca
+              env=prod
+              ver=1
+Annotations:  <none>
+Subsets:
+  Addresses:          172.17.0.10,172.17.0.3,172.17.0.7
+  NotReadyAddresses:  <none>
+  Ports:
+    Name     Port  Protocol
+    ----     ----  --------
+    <unset>  8080  TCP
+
+Events:  <none>
+   #+END_SRC
+
+   To use a service, an advanced application can talk to the
+   kubernetes API directly to look up endpoints and call them. The
+   kubernetes API even has the capability to "watch" objects and be
+   notified as soon as they change. In this way a client can react
+   immediately as soon as the IPs associated with a service change.
+
+   Demo:
+   #+BEGIN_SRC bash
+$ kubectl get endpoints alpaca-prod --watch
+NAME          ENDPOINTS                                          AGE
+alpaca-prod   172.17.0.10:8080,172.17.0.3:8080,172.17.0.7:8080   1h
+   #+END_SRC
+
+   Now open another terminal window and delete and recreate the
+   deployment backing alpaca-prod:
+   #+BEGIN_SRC bash
+$ kubectl delete deployment alpaca-prod
+$ kubectl run alpaca-prod --image=gcr.io/kuar-demo/kuard-amd64:1 --replicas=3 --port=8080 --labels="ver=1,app=alpaca,env=prod"
+   #+END_SRC
+
+   The output of the endpoints command will reflect that most
+   up-to-date set of IP addresses associated with the service.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
