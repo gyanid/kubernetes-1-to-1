@@ -1416,6 +1416,14 @@ $ kubectl delete rs kuard
 $ kubectl delete rs kuard --cascade=false
    #+END_SRC
 
+** Summary
+   Composing pods with replicasets provide the foundation for building
+   robust applications with automatic failover, and makes deploying
+   those applications a breeze by enabling and sane deployment
+   patterns. Replicaset should be used for any pod we care about, even
+   if it is a single pod. We can default to using ReplicaSets instead
+   of Pods.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
