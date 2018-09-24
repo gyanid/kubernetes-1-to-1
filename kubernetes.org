@@ -1424,6 +1424,66 @@ $ kubectl delete rs kuard --cascade=false
    if it is a single pod. We can default to using ReplicaSets instead
    of Pods.
 
+* DaemonSets
+  DaemonSets provide an easy-to-use abstraction for running a set of
+  pods on very node in a kubernetes cluster, or if the case requires
+  it, on a subset of nodes based on labels. The DaemonSet provides its
+  own controller and scheduler to ensure key services like monitoring
+  agents are always up and running on the right nodes in your cluster.
+
+  For applications such as agents and monitoring applications, that
+  need to be present on every machine in a cluster to function
+  properly, these daemonsets are useful.
+
+  Because the daemonset is an active declarative object managed by a
+  controller, it makes it easy to declare your intent that an agent
+  run on every machine without explicitly placing it on every
+  machine. This is especially useful in the context of an autoscaled
+  kubernetes cluster where nodes may constantly be coming and going
+  without user intervention. In such cases, the daemonsets
+  automatically adds the proper agents to each node as it is added to
+  the cluster by the autoscaler.
+
+  Example template to create a daemonset
+  #+BEGIN_SRC fluentd.yaml
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: kube-system
+  labels:
+    app: fluentd
+spec:
+  template:
+    metadata:
+      labels:
+        app: fluentd
+    spec:
+      containers:
+        - name: fluentd
+          image: fluent/fluentd:v0.14.10
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          volumeMounts:
+          - name: varlog
+            mountPath: /var/log
+          - name: varlibdockercontainers
+            mountPath: /var/lib/docker/containers
+            readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers  
+  #+END_SRC
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
@@ -1448,6 +1508,7 @@ $ kubectl delete rs kuard --cascade=false
   $ kubectl help
   $ kubectl help command-name
   $ kubectl apply -f pod-manifest.yaml
+  $ kubectl delete -f pod-manifest.yaml
   $ kubectl port-forward <pod-name> 8080:8080
   $ kubectl label deployments alpaca-test "canary=true"
   $ kubectl label deployments alpaca-test "canary=true"
