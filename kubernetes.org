@@ -1185,6 +1185,24 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
    node. In addition, any explicit cluster IP requested must come from
    that range and not already be in use.
 
+** Cluster IP Environment Variables
+   While most users should be using the DNS services to find cluster
+   IPs, there are some older mechanisms that may still be in use. One
+   of these is injecting a set of environment variables into pods as
+   they start up.
+   #+BEGIN_EXAMPLE
+   ALPACA_PROD_SERVICE_HOST	10.108.179.51
+   ALPACA_PROD_SERVICE_PORT	8080
+   #+END_EXAMPLE
+
+   A problem with the environment variable approach is that it
+   requires resources to be created in a specific order. The services
+   must be created before the pods that reference them. This can
+   introduce quite a bit of complexity when deploying a set of
+   services that make up a larger application. In addition, using just
+   environment variables seems strange to many users. For this reason,
+   DNS is probably the better option.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
