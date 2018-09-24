@@ -910,6 +910,9 @@ bandicoot-prod   ClusterIP   10.97.117.93    <none>        8080/TCP   4m        
 kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP    13d       <none>
    #+END_SRC
 
+   The =kubernetes= service is automatically created for you so that
+   you can find and talk to the Kubernetes API from within the app.
+
    The =kubectl expose= command conveniently pull both the label
    selector and the relevant ports (8080, in this case) from the
    deployment definition.
@@ -918,6 +921,37 @@ kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP    13d       
    called a cluster IP. This is a special IP address the system will
    load-balance across all of the pods that are identified by the
    selector.
+
+** Service DNS
+   Because the cluster IP is virtual it is stable and it is
+   appropriate to give it a DNS address. All of the issues around
+   clients caching DNS results no longer apply. Within a namespace, it
+   is as easy as just using the service name to connect to one of the
+   pods identified by a service.
+
+   The kubernetes DNS service provides DNS names for cluster IPs.
+
+   The A record for =alpaca-prod= would be:
+   #+BEGIN_EXAMPLE
+   alpaca-prod.default.svc.cluster.local.	30	IN	A	10.108.179.51
+   #+END_EXAMPLE
+   Break dows is as follows:
+   #+BEGIN_EXAMPLE
+   alpaca-prod
+       The name of the service in question.
+   default
+       The namespace that this service is in.
+   svc
+       Recognizing that this is a service. This allows Kubernetes to expose other types of things as DNS in the future.
+   cluster.local
+       The base domain name for the cluster. This is the default and what you will see for most clusters. 
+       Administrators may change this to allow unique DNS names across multiple clusters.
+   #+END_EXAMPLE
+
+   When referring to a service in your own namespace we can just use
+   the service name (alpaca-prod). We can also refer to a service in
+   another namespace with =alpaca-prod.default=. We can also use the
+   fully qualified service name as well.
 
 * Command cheatsheet
   #+BEGIN_SRC bash
