@@ -1126,6 +1126,40 @@ $ kubectl run alpaca-prod --image=gcr.io/kuar-demo/kuard-amd64:1 --replicas=3 --
    The output of the endpoints command will reflect that most
    up-to-date set of IP addresses associated with the service.
 
+** Manual Service Discovery
+   Kubernetes services are built on top of label selectors over
+   pods. That means we can use the kubernetes API to do rudimentary
+   service discovery without using a =Service= object at all!
+
+   With kubectl (and via the API) we can easily what IPs are assigned
+   to each pod in our example deployments:
+   #+BEGIN_SRC bash
+$ kubectl get pods -o wide --show-labels
+NAME                              READY     STATUS    RESTARTS   AGE       IP           NODE       LABELS
+alpaca-prod-7f94b54866-d9ddl      1/1       Running   0          55m       172.17.0.6   minikube   app=alpaca,env=prod,pod-template-hash=3950610422,ver=1
+alpaca-prod-7f94b54866-fxhvq      1/1       Running   0          55m       172.17.0.7   minikube   app=alpaca,env=prod,pod-template-hash=3950610422,ver=1
+alpaca-prod-7f94b54866-z62dq      1/1       Running   0          55m       172.17.0.3   minikube   app=alpaca,env=prod,pod-template-hash=3950610422,ver=1
+bandicoot-prod-85ddf4c7dd-7lz7z   1/1       Running   0          2h        172.17.0.8   minikube   app=bandicoot,env=prod,pod-template-hash=4188907388,ver=2
+bandicoot-prod-85ddf4c7dd-w2fgm   1/1       Running   0          2h        172.17.0.9   minikube   app=bandicoot,env=prod,pod-template-hash=4188907388,ver=2
+   #+END_SRC
+
+   This is great but what if you have a ton of pods? We'll probably
+   want to filter this based on the labels applied as part of the
+   deployment.
+   #+BEGIN_SRC bash
+$ kubectl get pods -o wide --selector=app=alpaca
+NAME                           READY     STATUS    RESTARTS   AGE       IP           NODE
+alpaca-prod-7f94b54866-d9ddl   1/1       Running   0          58m       172.17.0.6   minikube
+alpaca-prod-7f94b54866-fxhvq   1/1       Running   0          58m       172.17.0.7   minikube
+alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0.3   minikube
+   #+END_SRC
+
+   At this point we have the basics of service discovery. We can
+   always use labels to identify the set of pods we are interested in,
+   get all of the pods for those labels, and dig out the IP
+   address. But keeping the correct set of labels to use in sync can
+   be tricky. That is why the =Service= object was created.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
