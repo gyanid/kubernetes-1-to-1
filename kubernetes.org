@@ -1209,6 +1209,33 @@ alpaca-prod-7f94b54866-z62dq   1/1       Running   0          58m       172.17.0
    we can connect services to each other and expose them outside the
    cluster.
 
+* ReplicaSets
+  Pods are one-off singletons. More often than not, we want multiple
+  replicas of a container running at a particular time. Reasons for
+  replication:
+  - Redundancy :: Multiple running instances mean failure can be
+                  tolerated.
+  - Scale :: Multiple running instances mean that more requests can be
+             handled.
+  - Sharding :: Different replicas can handle different parts of a
+                computation in parallel.
+
+  We could manually create multiple copies of a Pod using multiple
+  different (though largely similar) Pod manifests, but doing so is
+  both tedious and errorprone. Logically, a user managing a replicated
+  set of Pods considers them as a sinle entity to be defined and
+  managed. This is precisely what a ReplicaSet is. A ReplicaSet acts
+  as a cluster-wide Pod manager, ensuring that the right types and
+  number of Pods are running at all times.
+
+  Because ReplicaSets make it easy to create and manage replicated
+  sets of Pods, they are the building blocks used to describe common
+  application deployment patterns and provide the underpinnings
+  (foundation) of self-healing for our applications at the
+  infrastructure level. Pods managed by ReplicaSets are automatically
+  rescheduled under certain failure conditions such as node failures
+  and network partitions.
+
 * Command cheatsheet
   #+BEGIN_SRC bash
   $ kubectl get componentstatuses
