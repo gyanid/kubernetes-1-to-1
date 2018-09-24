@@ -1445,7 +1445,7 @@ $ kubectl delete rs kuard --cascade=false
   the cluster by the autoscaler.
 
   Example template to create a daemonset
-  #+BEGIN_SRC fluentd.yaml
+  #+BEGIN_SRC YAML
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -1482,6 +1482,23 @@ spec:
         - name: varlibdockercontainers
           hostPath:
             path: /var/lib/docker/containers  
+  #+END_SRC
+
+  #+BEGIN_SRC bash
+$ kubectl apply -f fluentd.yaml
+  #+END_SRC
+
+  #+BEGIN_SRC bash
+$ kubect get daemonsets --namespace=kube-system
+NAME         DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+fluentd      1         1         0         1            0           <none>          2h
+kube-proxy   1         1         1         1            1           <none>          14d
+  #+END_SRC
+
+  Interesting to note that =kube-proxy= also runs as a daemonset.
+
+  #+BEGIN_SRC bash
+$ kubectl describe daemonset fluentd --namespace=kube-system
   #+END_SRC
 
 * Command cheatsheet
