@@ -13,6 +13,11 @@ $ minikube start --vm-driver=hyperkit
 $ minikube ssh
 $ minikube stop
   #+END_SRC
+* Kubectl Setup
+  #+BEGIN_SRC bash
+$ brew install kubernetes-cli
+$ kubectl version
+  #+END_SRC
 * Concepts
   - Kubernetes improves the development, delivery and maintenance of
     distributed applications.
