@@ -1,4 +1,4 @@
-#+Title: Learning Kubernetes
+#+Title: Kubernetes-1-to-1
 #+Date: <2018-09-22 Sat>
 #+Author: Yogesh Agrawal
 #+Email: yogeshiiith@gmail.com
@@ -6,14 +6,15 @@
 * Introduction
   Here will be learning kubernetes.
 
-* Minikube Setup
+* Install Tools
+** Minikube Setup
   #+BEGIN_SRC bash
 $ brew cask install minikube
 $ minikube start --vm-driver=hyperkit
 $ minikube ssh
 $ minikube stop
   #+END_SRC
-* Kubectl Setup
+** Kubectl Setup
   #+BEGIN_SRC bash
 $ brew install kubernetes-cli
 $ kubectl version
