@@ -218,6 +218,8 @@ kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP   12d
   the smallest deployable artifact in a kubernetes cluster. This means
   all of the containers in a Pod always land on the same machine.
 
+  A Pod is considered ready when all of its Containers are ready
+
   Each container within a Pod runs in its own cgroup, but they share a
   number of Linux namespaces.
 
